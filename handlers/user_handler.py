@@ -2,7 +2,7 @@ from aiogram import Router, F, Bot
 from aiogram.filters import CommandStart, StateFilter
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.state import State, StatesGroup, default_state
 
 import pytz
 import datetime
@@ -49,7 +49,7 @@ async def process_start_command_user(message: Message) -> None:
 @router.message(F.text == 'Канал')
 async def process_press_chanel(message: Message) -> None:
     logging.info(f'process_press_chanel: {message.chat.id}')
-    await message.answer(text=f'Сопроводительный текст с призывом подписаться на канал'
+    await message.answer(text=f'Сопроводительный текст с призывом подписаться на канал '
                               f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>',
                          disable_web_page_preview=True,
                          parse_mode='HTML')
@@ -143,6 +143,7 @@ async def get_info_user(message: Message, state: FSMContext, bot: Bot) -> None:
     await message.answer(text=f'Благодарим!\n'
                               f'В ближайшее время с вами свяжется нутрициолог для согласования'
                               f' удобного времени и записи на диагностику.')
+    await state.set_state(default_state)
 
 
 @router.message(F.text == 'FAQ')
