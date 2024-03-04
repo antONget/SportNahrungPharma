@@ -49,7 +49,8 @@ async def process_start_command_user(message: Message) -> None:
 @router.message(F.text == 'Канал')
 async def process_press_chanel(message: Message) -> None:
     logging.info(f'process_press_chanel: {message.chat.id}')
-    await message.answer(text=f'Сопроводительный текст с призывом подписаться на канал + ссылка на канал')
+    await message.answer(text=f'Сопроводительный текст с призывом подписаться на канал'
+                              f' <a href="{config.tg_bot.channel}">канал для подписки</a>')
 
 
 @router.message(F.text == 'Консультация')
