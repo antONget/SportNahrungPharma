@@ -50,7 +50,7 @@ async def process_start_command_user(message: Message) -> None:
 async def process_press_chanel(message: Message) -> None:
     logging.info(f'process_press_chanel: {message.chat.id}')
     await message.answer(text=f'Сопроводительный текст с призывом подписаться на канал'
-                              f' <a href="{config.tg_bot.channel}">канал для подписки</a>')
+                              f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>')
 
 
 @router.message(F.text == 'Консультация')
@@ -108,7 +108,8 @@ async def get_phone_user(message: Message, state: FSMContext) -> None:
     else:
         phone = message.text
     await state.update_data(phone_user=phone)
-    await message.answer(text=f'Задайте ваш вопрос')
+    await message.answer(text=f'Задайте ваш вопрос',
+                         reply_markup=keyboards_start())
     await state.set_state(User.info_user)
 
 
