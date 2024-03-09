@@ -165,8 +165,8 @@ question = {
 @router.message(F.text == 'FAQ')
 async def process_press_FAQ(message: Message) -> None:
     logging.info(f'process_press_FAQ: {message.chat.id}')
-    await message.answer(text=f'Список вопросов и ответов на них',
-                         reply_markup=keyboards_question())
+    # await message.answer(text=f'Список вопросов и ответов на них',
+    #                      reply_markup=keyboards_question())
     await message.answer(text=f'Список вопросов и ответов на них',
                          reply_markup=keyboards_select_question(question))
 
