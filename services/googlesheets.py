@@ -17,7 +17,7 @@ order_sheet = gsheet.worksheet("Заявка на консультацию")
 # добавить значения
 def append_user(telegram_id, username, date_user):
     logging.info(f'append_user')
-    order_sheet.append_row([telegram_id, username, date_user])
+    start_sheet.append_row([telegram_id, username, date_user])
 
 
 def append_client(id_telegram, user_name, name, phone, info):

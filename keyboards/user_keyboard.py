@@ -34,5 +34,13 @@ def keyboards_question():
     button_3 = InlineKeyboardButton(text='Вопрос 3', callback_data='question_3')
     button_4 = InlineKeyboardButton(text='Вопрос 4', callback_data='question_4')
     button_5 = InlineKeyboardButton(text='Вопрос 5', callback_data='question_5')
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[[button_1], [button_2], [button_3], [button_4], [button_5]], )
+    button_6 = InlineKeyboardButton(text='Вопрос 1', callback_data='question_6')
+    button_7 = InlineKeyboardButton(text='Вопрос 2', callback_data='question_7')
+    button_8 = InlineKeyboardButton(text='Вопрос 3', callback_data='question_8')
+    button_9 = InlineKeyboardButton(text='Вопрос 4', callback_data='question_9')
+    button_10 = InlineKeyboardButton(text='Вопрос 5', callback_data='question_10')
+    button_11 = InlineKeyboardButton(text='Вопрос 5', callback_data='question_11')
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[[button_1], [button_2], [button_3], [button_4], [button_5],
+                                                     [button_6], [button_7], [button_8], [button_9], [button_10],
+                                                     [button_11]], )
     return keyboard
