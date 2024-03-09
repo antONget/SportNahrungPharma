@@ -8,7 +8,8 @@ import pytz
 import datetime
 import logging
 from config_data.config import Config, load_config
-from keyboards.user_keyboard import keyboards_start, keyboards_subscription, keyboards_get_phone, keyboards_question
+from keyboards.user_keyboard import keyboards_start, keyboards_subscription, keyboards_get_phone, keyboards_question, \
+    keyboards_select_question
 from services.googlesheets import append_user, append_client
 import asyncio
 import requests
@@ -146,12 +147,6 @@ async def get_info_user(message: Message, state: FSMContext, bot: Bot) -> None:
     await state.set_state(default_state)
 
 
-@router.message(F.text == 'FAQ')
-async def process_press_FAQ(message: Message) -> None:
-    logging.info(f'process_press_FAQ: {message.chat.id}')
-    await message.answer(text=f'Список вопросов и ответов на них',
-                         reply_markup=keyboards_question())
-
 question = {
     "1. Почему неприятно пахнет из банки L-Carnitine 750 SNP?": "Сам главный компонент L карнитин тартрат имеет сильно неприятный запах, напоминающий запах рыбы и в какой-то степени сырое мясо (с лат. carni - мясо). К тому же капсула нашего продукта L-Carnitine 750 SNP не содержит примесей и наполнителей, поэтому в составе чистый l карнитин тартрат.",
     "2. Как принимать L-Carnitine 750 SNP?": "Наш продукт следует принимать за 30 мин до тренировки, поскольку к этому времени карнитин попадает в кровь, а пик его достигает через 2 часа после применения.",
@@ -165,6 +160,15 @@ question = {
     "10. Можно ли L-Carnitine 750 SNP сочетат с другими добавками?": "L-Carnitine 750 SNP - безопасный продукт, нет данных о неготивном взаимодействии с другими веществами, поэтому можно принимать вместе с другими добавками.",
     "11. Разве L-Carnitine 750 SNP явдяется жиросжигателем?": "L-Carnitine 750 SNP  переносит жирные кислоты в мышечных клетках в митохондрии, где они сгорают с образованием энергии, воды и углекислого газа. Так это и есть настоящий жиросжигатель. Понятие 'жиросжигатель' это образное, такие компоненты лишь выгоняют жиры из жирового депо в кровь, и то опосредовано. И если нет тренировок, то жиры вернуться обратно в жир."
 }
+
+
+@router.message(F.text == 'FAQ')
+async def process_press_FAQ(message: Message) -> None:
+    logging.info(f'process_press_FAQ: {message.chat.id}')
+    await message.answer(text=f'Список вопросов и ответов на них',
+                         reply_markup=keyboards_question())
+    await message.answer(text=f'Список вопросов и ответов на них',
+                         reply_markup=keyboards_select_question(question))
 
 
 @router.callback_query(F.data.startswith('question_'))
