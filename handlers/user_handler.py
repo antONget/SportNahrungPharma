@@ -50,8 +50,10 @@ async def process_start_command_user(message: Message) -> None:
 @router.message(F.text == 'Канал')
 async def process_press_chanel(message: Message) -> None:
     logging.info(f'process_press_chanel: {message.chat.id}')
-    await message.answer(text=f'Сопроводительный текст с призывом подписаться на канал '
-                              f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>',
+    await message.answer(text=f'Здравствуйте, подпишитесь на канал'
+                              f' <a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>.'
+                              f' На канале выкладываем всю актуальную информацию о здоровье, похудении,'
+                              f' добавках и правильном питании!',
                          disable_web_page_preview=True,
                          parse_mode='HTML')
 
@@ -84,6 +86,10 @@ async def process_press_subscription(callback: CallbackQuery, bot: Bot, state: F
     print(user_channel_status)
     if user_channel_status.status != 'left':
         await asyncio.sleep(2)
+        await callback.answer(f'Продолжая, вы соглашаетесь с условиями '
+                              f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">'
+                              f'Пользовательского соглашения</a>.',
+                              show_alert=True)
         await callback.message.answer(text=f'Введите ваше имя:')
         await state.set_state(User.get_name)
     else:
@@ -141,9 +147,7 @@ async def get_info_user(message: Message, state: FSMContext, bot: Bot) -> None:
                                     f'Телефон: {user_dict[message.chat.id]["phone_user"]}\n'
                                     f'Комментарий: {user_dict[message.chat.id]["info"]}')
 
-    await message.answer(text=f'Благодарим!\n'
-                              f'В ближайшее время с вами свяжется нутрициолог для согласования'
-                              f' удобного времени и записи на диагностику.')
+    await message.answer(text=f'Благодарим! В ближайшее время с Вами свяжется нутрициолог и ответит на Ваш вопрос')
     await state.set_state(default_state)
 
 
