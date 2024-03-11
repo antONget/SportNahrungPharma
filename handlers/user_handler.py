@@ -63,7 +63,9 @@ async def process_press_consultation(message: Message, bot: Bot, state: FSMConte
     logging.info(f'process_press_consultation: {message.chat.id}')
     await message.answer(text=f'Задайте свой вопрос квалифицированному нутрициологу, оставьте ваши контакты'
                               f' и подпишитесь на наш Телеграм-канал: '
-                              f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>',
+                              f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>'
+                              f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">'
+                              f'Пользовательское соглашение</a>',
                          disable_web_page_preview=True,
                          parse_mode='HTML')
     user_channel_status = await bot.get_chat_member(chat_id=config.tg_bot.channel, user_id=message.from_user.id)
@@ -86,9 +88,7 @@ async def process_press_subscription(callback: CallbackQuery, bot: Bot, state: F
     print(user_channel_status)
     if user_channel_status.status != 'left':
         await asyncio.sleep(2)
-        await callback.answer(f'Продолжая, вы соглашаетесь с условиями '
-                              f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">'
-                              f'Пользовательского соглашения</a>.',
+        await callback.answer(f'Продолжая, вы соглашаетесь с условиями "Пользовательского соглашения".',
                               show_alert=True)
         await callback.message.answer(text=f'Введите ваше имя:')
         await state.set_state(User.get_name)
