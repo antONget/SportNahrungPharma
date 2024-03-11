@@ -63,7 +63,7 @@ async def process_press_consultation(message: Message, bot: Bot, state: FSMConte
     logging.info(f'process_press_consultation: {message.chat.id}')
     await message.answer(text=f'Задайте свой вопрос квалифицированному нутрициологу, оставьте ваши контакты'
                               f' и подпишитесь на наш Телеграм-канал: '
-                              f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>'
+                              f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>\n'
                               f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">'
                               f'Пользовательское соглашение</a>',
                          disable_web_page_preview=True,
@@ -72,6 +72,10 @@ async def process_press_consultation(message: Message, bot: Bot, state: FSMConte
     print(user_channel_status)
     if user_channel_status.status != 'left':
         await asyncio.sleep(2)
+        await message.answer(text=f'Продолжая, вы соглашаетесь с условиями "Пользовательского соглашения".\n'
+                                  f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">'
+                                  f'Пользовательское соглашение</a>',
+                              show_alert=True)
         await message.answer(text=f'Введите ваше имя:')
         await state.set_state(User.get_name)
     else:
