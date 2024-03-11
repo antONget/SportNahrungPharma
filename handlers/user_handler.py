@@ -64,7 +64,7 @@ async def process_press_consultation(message: Message, bot: Bot, state: FSMConte
     await message.answer(text=f'Задайте свой вопрос квалифицированному нутрициологу, оставьте ваши контакты'
                               f' и подпишитесь на наш Телеграм-канал: '
                               f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>\n'
-                              f'Продолжая вы соглашаетесь с условиями:'
+                              f'Продолжая вы соглашаетесь с условиями:\n'
                               f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">Пользовательского соглашения</a>',
                          disable_web_page_preview=True,
                          parse_mode='HTML')
@@ -89,7 +89,7 @@ async def process_press_subscription(callback: CallbackQuery, bot: Bot, state: F
     if user_channel_status.status != 'left':
         await asyncio.sleep(2)
         await callback.answer(f'Продолжая, вы соглашаетесь с условиями:\n'
-                              f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">Пользовательского соглашения</a>',
+                              f'"Пользовательского соглашения"',
                               show_alert=True)
         await callback.message.answer(text=f'Введите ваше имя:')
         await state.set_state(User.get_name)
