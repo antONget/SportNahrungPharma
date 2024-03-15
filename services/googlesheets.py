@@ -2,16 +2,16 @@ import gspread
 import logging
 
 
-gp = gspread.service_account(filename='services/test.json')
-
+# gp = gspread.service_account(filename='services/test.json')
+gp = gspread.service_account(filename='services/sport-nahrung-pharma-75c221765c94.json')
 #Open Google spreadsheet
-gsheet = gp.open('SportNahrungPharma')
-
+# gsheet = gp.open('SportNahrungPharma')
+gsheet = gp.open('Data from Telegram bot')
 
 
 # select worksheet
-start_sheet = gsheet.worksheet("/start")
-order_sheet = gsheet.worksheet("Заявка на консультацию")
+start_sheet = gsheet.worksheet("start")
+order_sheet = gsheet.worksheet("заявка на консультацию")
 
 
 # добавить значения
