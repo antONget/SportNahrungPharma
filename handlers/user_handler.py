@@ -61,10 +61,9 @@ async def process_press_chanel(message: Message) -> None:
 @router.message(F.text == 'Консультация')
 async def process_press_consultation(message: Message, bot: Bot, state: FSMContext) -> None:
     logging.info(f'process_press_consultation: {message.chat.id}')
-    await message.answer(text=f'Задайте свой вопрос квалифицированному нутрициологу, оставьте ваши контакты'
-                              f' и подпишитесь на наш Телеграм-канал: '
+    await message.answer(text=f'Чтобы задать вопрос квалифицированному нутрициологу подпишитесь на наш телеграм канал: '
                               f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>\n'
-                              f'Продолжая вы соглашаетесь с условиями:\n'
+                              f'и напиши свой номер телефона. Продолжая вы соглашаетесь с условиями:\n'
                               f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">Пользовательского соглашения</a>',
                          disable_web_page_preview=True,
                          parse_mode='HTML')
@@ -75,7 +74,7 @@ async def process_press_consultation(message: Message, bot: Bot, state: FSMConte
         await message.answer(text=f'Введите ваше имя:')
         await state.set_state(User.get_name)
     else:
-        await message.answer(text=f'Для получения консультации подпишись на канал: '
+        await message.answer(text=f'Чтобы задать вопрос квалифицированному нутрициологу подпишитесь на наш телеграм канал: '
                                   f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>',
                              reply_markup=keyboards_subscription(),
                              parse_mode='html')
