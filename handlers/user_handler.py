@@ -42,8 +42,8 @@ async def process_start_command_user(message: Message) -> None:
     tz_moscow = pytz.timezone("Europe/Moscow")
     dt_moscow = str(datetime.datetime.now(tz_moscow)).split()[0]
     append_user(message.chat.id, message.from_user.username, dt_moscow)
-    await message.answer(text=f'Благодарим Вас за покупку нашего товара! Если у вас есть вопросы как его принимать'
-                              f' или вы желаете узнать больше о спортивных добавках это бот поможет вам.',
+    await message.answer(text=f'Благодарим за обращение. Если Вы хотите задать вопрос нутрициологу, нажмите на кнопку'
+                              f' "Консультация"',
                          reply_markup=keyboards_start())
 
 
