@@ -36,6 +36,17 @@ def get_telegram_user(user_id, bot_token):
     return response.json()
 
 
+def validate_russian_phone_number(phone_number):
+    # Паттерн для российских номеров телефона
+    # Российские номера могут начинаться с +7, 8, или без кода страны
+    pattern = re.compile(r'^(\+7|8|7)?(\d{10})$')
+
+    # Проверка соответствия паттерну
+    match = pattern.match(phone_number)
+
+    return bool(match)
+
+
 @router.message(CommandStart())
 async def process_start_command_user(message: Message) -> None:
     logging.info(f'process_start_command_user: {message.chat.id}')
@@ -112,10 +123,12 @@ async def get_name_user(message: Message, state: FSMContext) -> None:
 async def get_phone_user(message: Message, state: FSMContext) -> None:
     logging.info(f'get_phone_user: {message.chat.id}')
     if message.contact:
-        phone = message.contact.phone_number
-        print(phone)
+        phone = str(message.contact.phone_number)
     else:
         phone = message.text
+        if not validate_russian_phone_number(phone):
+            await message.answer(text="Неверный формат номера. Повторите ввод:")
+            return
     await state.update_data(phone_user=phone)
     await message.answer(text=f'Задайте ваш вопрос',
                          reply_markup=keyboards_start())
