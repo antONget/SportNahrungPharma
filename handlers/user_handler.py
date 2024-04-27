@@ -130,7 +130,7 @@ async def get_phone_user(message: Message, state: FSMContext) -> None:
             await message.answer(text="Неверный формат номера. Повторите ввод:")
             return
     await state.update_data(phone_user=phone)
-    await message.answer(text=f'Задайте ваш вопрос',
+    await message.answer(text=f'Мы приняли заявку, напишите в ответном сообщении свой вопрос и в течение дня нутрициолог с Вами свяжется! Благодарим за обращение!',
                          reply_markup=keyboards_start())
     await state.set_state(User.info_user)
 
