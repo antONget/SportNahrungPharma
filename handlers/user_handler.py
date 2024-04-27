@@ -80,7 +80,7 @@ async def process_press_consultation(message: Message, bot: Bot, state: FSMConte
                          disable_web_page_preview=True,
                          parse_mode='HTML')
     logging.info(f'{message.from_user.id}-{message.chat.id}')
-    user_channel_status = await bot.get_chat_member(chat_id=config.tg_bot.channel,
+    user_channel_status = await bot.get_chat_member(chat_id=-1001678824344,
                                                     user_id=message.chat.id)
     print(user_channel_status)
     if user_channel_status.status != 'left':
