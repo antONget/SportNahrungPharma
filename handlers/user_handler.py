@@ -79,7 +79,9 @@ async def process_press_consultation(message: Message, bot: Bot, state: FSMConte
                               f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">Пользовательского соглашения</a>',
                          disable_web_page_preview=True,
                          parse_mode='HTML')
-    user_channel_status = await bot.get_chat_member(chat_id=config.tg_bot.channel, user_id=message.from_user.id)
+    logging.info(f'{message.from_user.id}-{message.chat.id}'
+    user_channel_status = await bot.get_chat_member(chat_id=config.tg_bot.channel,
+                                                    user_id=message.chat.id)
     print(user_channel_status)
     if user_channel_status.status != 'left':
         await asyncio.sleep(2)
