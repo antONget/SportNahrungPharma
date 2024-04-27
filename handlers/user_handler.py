@@ -13,6 +13,7 @@ from keyboards.user_keyboard import keyboards_start, keyboards_subscription, key
 from services.googlesheets import append_user, append_client
 import asyncio
 import requests
+import re
 
 router = Router()
 # Загружаем конфиг в переменную config
