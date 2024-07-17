@@ -8,10 +8,8 @@ import pytz
 import datetime
 import logging
 from config_data.config import Config, load_config
-from keyboards.user_keyboard import keyboards_start, keyboards_subscription, keyboards_get_phone, keyboards_question, \
-    keyboards_select_question
+from keyboards.user_keyboard import keyboards_start, keyboards_get_phone, keyboards_select_question
 from services.googlesheets import append_user, append_client
-import asyncio
 import requests
 import re
 
@@ -21,6 +19,7 @@ config: Config = load_config()
 
 
 class User(StatesGroup):
+    question_user = State()
     get_name = State()
     get_phone = State()
     info_user = State()
@@ -71,50 +70,30 @@ async def process_press_chanel(message: Message) -> None:
 
 
 @router.message(F.text == 'Консультация')
-async def process_press_consultation(message: Message, bot: Bot, state: FSMContext) -> None:
+async def process_press_consultation(message: Message, state: FSMContext) -> None:
     logging.info(f'process_press_consultation: {message.chat.id}')
-    await message.answer(text=f'Напишите Ваш вопрос. Продолжая, вы соглашаетесь с условиями: Пользовательского соглашения.\n'
-                              f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">Пользовательского соглашения</a>',
+    await message.answer(text=f'Напишите Ваш вопрос. Продолжая, вы соглашаетесь с условиями:'
+                              f' Пользовательского соглашения.\n'
+                              f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH'
+                              f'-03-11">Пользовательского соглашения</a>',
                          disable_web_page_preview=True,
                          parse_mode='HTML')
+    await state.set_state(User.question_user)
 
-    # user_channel_status = await bot.get_chat_member(chat_id=config.tg_bot.channel, user_id=message.from_user.id)
-    # print(user_channel_status)
-    # if user_channel_status.status != 'left':
-    await asyncio.sleep(2)
+
+@router.message(F.text, StateFilter(User.question_user))
+async def process_press_consultation(message: Message, state: FSMContext) -> None:
+    logging.info(f'process_press_consultation: {message.chat.id}')
+    await state.update_data(question=message.text)
     await message.answer(text=f'Напишите Ваше имя')
     await state.set_state(User.get_name)
-    # else:
-    #     await message.answer(text=f'Чтобы задать вопрос квалифицированному нутрициологу подпишитесь на наш телеграм канал: '
-    #                               f'<a href="{config.tg_bot.channel}">{config.tg_bot.channel}</a>',
-    #                          reply_markup=keyboards_subscription(),
-    #                          parse_mode='html')
-
-
-# @router.callback_query(F.data == 'subscription')
-# async def process_press_subscription(callback: CallbackQuery, bot: Bot, state: FSMContext):
-#     logging.info(f'process_press_subscription: {callback.message.chat.id}')
-#     user_channel_status = await bot.get_chat_member(chat_id=config.tg_bot.channel, user_id=callback.message.chat.id)
-#     print(user_channel_status)
-#     if user_channel_status.status != 'left':
-#         await asyncio.sleep(2)
-#         await callback.answer(f'Продолжая, вы соглашаетесь с условиями:\n'
-#                               f'"Пользовательского соглашения"',
-#                               show_alert=True)
-#         await callback.message.answer(text=f'Введите ваше имя:')
-#         await state.set_state(User.get_name)
-#     else:
-#         await callback.message.answer(text=f'Для получения консультации подпишись на канал: '
-#                                            f'<a href="{config.tg_bot.channel}">канал для подписки</a>',
-#                                       reply_markup=keyboards_subscription(),
-#                                       parse_mode='HTML')
 
 
 @router.message(F.text, StateFilter(User.get_name))
 async def get_name_user(message: Message, state: FSMContext) -> None:
     logging.info(f'get_name_user: {message.chat.id}')
     await state.update_data(name_user=message.text)
-    await message.answer(text=f'Напишите Ваше номер телефона',
+    await message.answer(text=f'Напишите Ваш номер телефона',
                          reply_markup=keyboards_get_phone())
     await state.set_state(User.get_phone)
 
@@ -140,11 +119,6 @@ async def get_info_user(message: Message, state: FSMContext, bot: Bot) -> None:
     logging.info(f'get_info_user: {message.chat.id}')
     await state.update_data(info=message.text)
     user_dict[message.chat.id] = await state.get_data()
-    print('id_telegram=', message.chat.id,
-          'user_name=', message.from_user.username,
-          'name=', user_dict[message.chat.id]['name_user'],
-          'phone=', user_dict[message.chat.id]['phone_user'],
-          'info_user=', user_dict[message.chat.id]['info'])
     append_client(id_telegram=message.chat.id,
                   user_name=message.from_user.username,
                   name=user_dict[message.chat.id]['name_user'],
