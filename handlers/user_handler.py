@@ -73,51 +73,48 @@ async def process_press_chanel(message: Message) -> None:
 @router.message(F.text == 'Консультация')
 async def process_press_consultation(message: Message, bot: Bot, state: FSMContext) -> None:
     logging.info(f'process_press_consultation: {message.chat.id}')
-    await message.answer(text=f'Чтобы задать вопрос квалифицированному нутрициологу подпишитесь на наш телеграм канал: '
-                              f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>\n'
-                              f'и напиши свой номер телефона. Продолжая вы соглашаетесь с условиями:\n'
+    await message.answer(text=f'Напишите Ваш вопрос. Продолжая, вы соглашаетесь с условиями: Пользовательского соглашения.\n'
                               f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH-03-11">Пользовательского соглашения</a>',
                          disable_web_page_preview=True,
                          parse_mode='HTML')
-    logging.info(f'{message.from_user.id}-{message.chat.id}')
-    user_channel_status = await bot.get_chat_member(chat_id=-1001678824344,
-                                                    user_id=message.chat.id)
-    print(user_channel_status)
-    if user_channel_status.status != 'left':
-        await asyncio.sleep(2)
-        await message.answer(text=f'Введите ваше имя:')
-        await state.set_state(User.get_name)
-    else:
-        await message.answer(text=f'Чтобы задать вопрос квалифицированному нутрициологу подпишитесь на наш телеграм канал: '
-                                  f'<a href="https://t.me/{config.tg_bot.channel}">{config.tg_bot.channel}</a>',
-                             reply_markup=keyboards_subscription(),
-                             parse_mode='html')
+
+    # user_channel_status = await bot.get_chat_member(chat_id=config.tg_bot.channel, user_id=message.from_user.id)
+    # print(user_channel_status)
+    # if user_channel_status.status != 'left':
+    await asyncio.sleep(2)
+    await message.answer(text=f'Напишите Ваше имя')
+    await state.set_state(User.get_name)
+    # else:
+    #     await message.answer(text=f'Чтобы задать вопрос квалифицированному нутрициологу подпишитесь на наш телеграм канал: '
+    #                               f'<a href="{config.tg_bot.channel}">{config.tg_bot.channel}</a>',
+    #                          reply_markup=keyboards_subscription(),
+    #                          parse_mode='html')
 
 
-@router.callback_query(F.data=='subscription')
-async def process_press_subscription(callback: CallbackQuery, bot: Bot, state: FSMContext):
-    logging.info(f'process_press_subscription: {callback.message.chat.id}')
-    user_channel_status = await bot.get_chat_member(chat_id=config.tg_bot.channel, user_id=callback.message.chat.id)
-    print(user_channel_status)
-    if user_channel_status.status != 'left':
-        await asyncio.sleep(2)
-        await callback.answer(f'Продолжая, вы соглашаетесь с условиями:\n'
-                              f'"Пользовательского соглашения"',
-                              show_alert=True)
-        await callback.message.answer(text=f'Введите ваше имя:')
-        await state.set_state(User.get_name)
-    else:
-        await callback.message.answer(text=f'Для получения консультации подпишись на канал: '
-                                           f'<a href="{config.tg_bot.channel}">канал для подписки</a>',
-                                      reply_markup=keyboards_subscription(),
-                                      parse_mode='HTML')
+# @router.callback_query(F.data == 'subscription')
+# async def process_press_subscription(callback: CallbackQuery, bot: Bot, state: FSMContext):
+#     logging.info(f'process_press_subscription: {callback.message.chat.id}')
+#     user_channel_status = await bot.get_chat_member(chat_id=config.tg_bot.channel, user_id=callback.message.chat.id)
+#     print(user_channel_status)
+#     if user_channel_status.status != 'left':
+#         await asyncio.sleep(2)
+#         await callback.answer(f'Продолжая, вы соглашаетесь с условиями:\n'
+#                               f'"Пользовательского соглашения"',
+#                               show_alert=True)
+#         await callback.message.answer(text=f'Введите ваше имя:')
+#         await state.set_state(User.get_name)
+#     else:
+#         await callback.message.answer(text=f'Для получения консультации подпишись на канал: '
+#                                            f'<a href="{config.tg_bot.channel}">канал для подписки</a>',
+#                                       reply_markup=keyboards_subscription(),
+#                                       parse_mode='HTML')
 
 
 @router.message(F.text, StateFilter(User.get_name))
 async def get_name_user(message: Message, state: FSMContext) -> None:
     logging.info(f'get_name_user: {message.chat.id}')
     await state.update_data(name_user=message.text)
-    await message.answer(text=f'Введите ваш контактный телефон или нажмите «Поделиться контактом» ⤵️',
+    await message.answer(text=f'Напишите Ваше номер телефона',
                          reply_markup=keyboards_get_phone())
     await state.set_state(User.get_phone)
 
@@ -133,7 +130,7 @@ async def get_phone_user(message: Message, state: FSMContext) -> None:
             await message.answer(text="Неверный формат номера. Повторите ввод:")
             return
     await state.update_data(phone_user=phone)
-    await message.answer(text=f'Мы приняли заявку, напишите в ответном сообщении свой вопрос и в течение дня нутрициолог с Вами свяжется! Благодарим за обращение!',
+    await message.answer(text=f'Мы приняли заявку, в течение дня с Вами свяжется нутрициолог. Благодарим за обращение!',
                          reply_markup=keyboards_start())
     await state.set_state(User.info_user)
 
@@ -201,7 +198,3 @@ async def process_press_question(callback: CallbackQuery, bot: Bot, state: FSMCo
             await callback.message.answer(text=f'<b>{key}</b>\n\n'
                                                f'{value}',
                                           parse_mode='html')
-
-
-
-
