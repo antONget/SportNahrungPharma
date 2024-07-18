@@ -83,13 +83,12 @@ async def process_press_chanel(message: Message) -> None:
 async def process_press_consultation(message: Message, state: FSMContext) -> None:
     """
     Нажата кнопка "Консультация" - Просьба ввести вопрос
-    :param message: 
-    :param state: 
-    :return: 
+    :param message:
+    :param state:
+    :return:
     """
     logging.info(f'process_press_consultation: {message.chat.id}')
-    await message.answer(text=f'Напишите Ваш вопрос. Продолжая, вы соглашаетесь с условиями:'
-                              f' Пользовательского соглашения.\n'
+    await message.answer(text=f'Напишите Ваш вопрос. Продолжая, вы соглашаетесь с условиями:\n'
                               f'<a href="https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-OB-OBRABOTKE-PERSONALNYH-DANNYH'
                               f'-03-11">Пользовательского соглашения</a>',
                          disable_web_page_preview=True,
@@ -101,9 +100,9 @@ async def process_press_consultation(message: Message, state: FSMContext) -> Non
 async def process_press_consultation(message: Message, state: FSMContext) -> None:
     """
     Получаем вопрос и запрашиваем имя
-    :param message: 
-    :param state: 
-    :return: 
+    :param message:
+    :param state:
+    :return:
     """
     logging.info(f'process_press_consultation: {message.chat.id}')
     await state.update_data(question=message.text)
@@ -115,9 +114,9 @@ async def process_press_consultation(message: Message, state: FSMContext) -> Non
 async def get_name_user(message: Message, state: FSMContext) -> None:
     """
     Получаем имя и запрашиваем номер телефона
-    :param message: 
-    :param state: 
-    :return: 
+    :param message:
+    :param state:
+    :return:
     """
     logging.info(f'get_name_user: {message.chat.id}')
     await state.update_data(name_user=message.text)
@@ -130,10 +129,10 @@ async def get_name_user(message: Message, state: FSMContext) -> None:
 async def get_phone_user(message: Message, state: FSMContext, bot: Bot) -> None:
     """
     Получаем номер телефона (проверяем его) и отправляем данные в канал
-    :param message: 
-    :param state: 
+    :param message:
+    :param state:
     :param bot:
-    :return: 
+    :return:
     """
     logging.info(f'get_phone_user: {message.chat.id}')
     if message.contact:
@@ -164,7 +163,7 @@ async def get_phone_user(message: Message, state: FSMContext, bot: Bot) -> None:
                                     f'Телефон: {user_dict[message.chat.id]["phone_user"]}\n'
                                     f'Вопрос: {user_dict[message.chat.id]["question"]}')
 
-    await message.answer(text=f'Благодарим! В ближайшее время с Вами свяжется нутрициолог и ответит на Ваш вопрос')
+    # await message.answer(text=f'Благодарим! В ближайшее время с Вами свяжется нутрициолог и ответит на Ваш вопрос')
     await state.set_state(default_state)
 
 
@@ -228,4 +227,3 @@ async def process_press_question(callback: CallbackQuery):
             await callback.message.answer(text=f'<b>{key}</b>\n\n'
                                                f'{value}',
                                           parse_mode='html')
-            
