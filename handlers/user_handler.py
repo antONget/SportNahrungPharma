@@ -158,7 +158,7 @@ async def get_phone_user(message: Message, state: FSMContext, bot: Bot) -> None:
     if 'result' in channel:
         await bot.send_message(chat_id=config.tg_bot.group_id,
                                text=f'Telegram_id: {message.chat.id}\n'
-                                    f'@username: {message.from_user.username}\n'
+                                    f'username: @{message.from_user.username}\n'
                                     f'Имя: {user_dict[message.chat.id]["name_user"]}\n'
                                     f'Телефон: {user_dict[message.chat.id]["phone_user"]}\n'
                                     f'Вопрос: {user_dict[message.chat.id]["question"]}')
